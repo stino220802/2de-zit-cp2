@@ -25,12 +25,12 @@ typedef struct TAGinfoHeader
     unsigned int iClrImportant; // geeft het aantal kleur indexen dat belangrijk zijn in de image
 }infoHeader;
 
-typedef struct PixelInfo{
+struct pixel{
     unsigned char blue;
     unsigned char green;
     unsigned char red;
-    unsigned char rgbReserved; // moet 0 zijn
-}pixelInfo;
+    //unsigned char rgbReserved; // moet 0 zijn
+};
 infoHeader infoHEADER;
 imageHeader fileHeader;
 int main(){
@@ -42,11 +42,18 @@ int main(){
     }
     unsigned short fileType;
     fread(&fileType, 1, sizeof (unsigned short), fp);
+    long length = infoHEADER.iWidth * infoHEADER.iHeight;
+    struct pixel pixels[length];
     if(fileType == 0x4d42){
         printf("fileType is correct\n");
         printf("file identifier = %d\n", fileType);
         fread(&fileHeader, 1, sizeof(imageHeader), fp);
         fread(&infoHEADER, 1, sizeof(infoHeader), fp);
+        fread(pixels, sizeof(unsigned char), length, fp);
+        printf("b %u \n", pixels[105].green);
+
+        printf("break");
+
         fclose(fp);
     }
 
