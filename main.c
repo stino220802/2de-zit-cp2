@@ -14,11 +14,12 @@ int getSizeBmp(FILE *f);
 void readInputBmpfile(pixel* RGB, int imageSize, unsigned char* bmpheader, FILE *f);
 void outputBMP(pixel* RGB, unsigned char* bmpheader, int imageSize, char* inputFileName);
 void removeBMPfromString(char* inputFileName);
-void outputRGBRed(unsigned char* RGBRed, pixel* RGB, int imageSize);
 char* outputBMPFileName(char* inputFileName, char str[]);
 void createOutput(unsigned char* bmpheader, char* outputName, unsigned char* RGBout, int imageSize);
+void outputRGBRed(unsigned char* RGBRed, pixel* RGB, int imageSize);
 void outputRGBGreen(unsigned char* RGBGreen, pixel* RGB, int imageSize);
 void outputRGBBlue(unsigned char* RGBBlue, pixel* RGB, int imageSize);
+void outputRGBinverted(unsigned char* RGBinverted, pixel* RGB, int imageSize);
 
 int main(int argc, char** argv){
     char* inputFileName = malloc(80);
@@ -49,6 +50,7 @@ int main(int argc, char** argv){
 
     fclose(f);
     free(inputFileName);
+    free(bmpheader);
     free(RGB);
     return 0;
 }
@@ -89,6 +91,7 @@ void outputBMP(pixel* RGB, unsigned char* bmpheader, int imageSize, char* inputF
     char strRed[] = "_red.bmp";
     char strGreen[] = "_green.bmp";
     char strBlue[] = "_blue.bmp";
+    char strInverted[] = "_inverted.bmp";
 
     unsigned char* RGBout = malloc(imageSize * sizeof(*RGBout));
     char* outputName;
@@ -108,6 +111,11 @@ void outputBMP(pixel* RGB, unsigned char* bmpheader, int imageSize, char* inputF
     outputName = outputBMPFileName(inputFileName, strBlue);
     createOutput(bmpheader, outputName, RGBout, imageSize);
 
+    //geinverteerd
+    outputRGBinverted(RGBout, RGB, imageSize);
+    outputName = outputBMPFileName(inputFileName, strInverted);
+    createOutput(bmpheader, outputName, RGBout, imageSize); 
+
     free(outputName);
     free(RGBout);
 }
@@ -120,18 +128,7 @@ void removeBMPfromString(char* inputFileName){
     inputFileName[a-4] = '\0';
 
 }
-void outputRGBRed(unsigned char* RGBRed, pixel* RGB, int imageSize){
-    int x = 0;
-    int j = imageSize / 3;
-    for(int i = 0; i < j; i++ ){
-        RGBRed[x] = 0;
-        RGBRed[x+1] = 0;
-        RGBRed[x+2] = 0;
-        RGBRed[x+2] = RGB[i].red;
-        x = x +3;
-    }
 
-}
 char* outputBMPFileName(char* inputFileName, char str[]){
 
     int sizeName = strlen(inputFileName) + strlen(str);
@@ -159,6 +156,18 @@ void createOutput(unsigned char* bmpheader, char* outputName, unsigned char* RGB
 
 
 }
+void outputRGBRed(unsigned char* RGBRed, pixel* RGB, int imageSize){
+    int x = 0;
+    int j = imageSize / 3;
+    for(int i = 0; i < j; i++ ){
+        RGBRed[x] = 0;
+        RGBRed[x+1] = 0;
+        RGBRed[x+2] = 0;
+        RGBRed[x+2] = RGB[i].red;
+        x = x +3;
+    }
+
+}
 void outputRGBGreen(unsigned char* RGBGreen, pixel* RGB, int imageSize){
     int x = 0;
     int j = imageSize / 3;
@@ -182,6 +191,18 @@ void outputRGBBlue(unsigned char* RGBBlue, pixel* RGB, int imageSize){
         x = x + 3;
     }
 }
+void outputRGBinverted(unsigned char* RGBinverted, pixel* RGB, int imageSize){
+    int x = 0;
+    int j = imageSize / 3;
+    for(int i = 0; i < j; i++ ){
+        RGBinverted[x] = 0;
+        RGBinverted[x+1] = 0;
+        RGBinverted[x+2] = 0;
+        RGBinverted[x] = 255 - RGB[i].blue;
+        RGBinverted[x+1] = 255 - RGB[i].green;
+        RGBinverted[x+2] = 255 - RGB[i].red;
+        x = x + 3;
+    }
+}
 
 
-//https://www.includehelp.com/c-programs/c-program-to-create-a-file-file-handling-programs.aspx
