@@ -10,6 +10,7 @@ typedef struct {
 } pixel;
 
 void helpmenu();
+void code(char* inputFileName); 
 int getSizeBmp(FILE *f);
 void readInputBmpfile(pixel* RGB, int imageSize, unsigned char* bmpheader, FILE *f);
 void outputBMP(pixel* RGB, unsigned char* bmpheader, int imageSize, char* inputFileName);
@@ -30,9 +31,18 @@ int main(int argc, char** argv){
     }
     else if (argc == 3 && strcmp(argv[1], "-i") == 0) {
                 strcpy(inputFileName, argv[2]);
-            }
+                code(inputFileName);
 
+    }
+    return 0;
+}
+void helpmenu(){
+    printf("-i met daarachter de inputfile\n ");
 
+    printf("voorbeeld\n");
+    printf("./splitchannels -i meme.bmp\n");
+}
+void code(char* inputFileName){
     FILE *f = fopen(inputFileName, "rb");
     if (f == NULL) {
         printf("something went wrong while opening file");
@@ -52,13 +62,6 @@ int main(int argc, char** argv){
     free(inputFileName);
     free(bmpheader);
     free(RGB);
-    return 0;
-}
-void helpmenu(){
-    printf("-i met daarachter de inputfile\n ");
-
-    printf("voorbeeld\n");
-    printf("./splitchannels -i meme.bmp\n");
 }
 int getSizeBmp(FILE *f){
     unsigned char bmpheader[54];
@@ -114,7 +117,7 @@ void outputBMP(pixel* RGB, unsigned char* bmpheader, int imageSize, char* inputF
     //geinverteerd
     outputRGBinverted(RGBout, RGB, imageSize);
     outputName = outputBMPFileName(inputFileName, strInverted);
-    createOutput(bmpheader, outputName, RGBout, imageSize); 
+    createOutput(bmpheader, outputName, RGBout, imageSize);
 
     free(outputName);
     free(RGBout);
