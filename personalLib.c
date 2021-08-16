@@ -4,12 +4,24 @@
 #include <string.h>
 #include <stdlib.h>
 
+
+/*
+ * This function prints the help menu
+ * @Param: /
+ * @returns void
+ */
 void helpmenu(){
     printf("-i met daarachter de inputfile\n ");
 
     printf("voorbeeld\n");
     printf("./splitchannels -i meme.bmp\n");
 }
+
+/*
+ * This function will read an input file and create 3 files, each contain only the red, green and blue colors of the respective pixels. Also a 4th file with the colors inverted
+ * char pointer used to store the input bmp file name
+ * @return void
+ */
 void code(char* inputFileName){
     FILE *f = fopen(inputFileName, "rb");
     if (f == NULL) {
@@ -31,6 +43,12 @@ void code(char* inputFileName){
     free(bmpheader);
     free(RGB);
 }
+
+/*
+ *This function gets the size of the bmp image
+ * @param: File pointer f of input bmp file
+ * @return: returns the image size as int imageSize
+ */
 int getSizeBmp(FILE *f){
     unsigned char bmpheader[54];
     fread(bmpheader, sizeof(unsigned char ), 54, f);
@@ -40,6 +58,15 @@ int getSizeBmp(FILE *f){
 
     return imageSize;
 }
+
+/*
+ * This function read the pixels of the input bmp file and stores them in the array of struct RGB and stores header information into pointer bmpheader
+ * @param: pointer array of struct pixel
+ * @param: int imagesize = size of input image
+ * @param: unsigned char pointer bmpheader: header information of input bmp file
+ * @param: File pointer f of input bmp file
+ * @return: void
+ */
 void readInputBmpfile(pixel* RGB, int imageSize, unsigned char* bmpheader, FILE* f){
     rewind(f);
     unsigned char tempRGB[imageSize];
@@ -57,6 +84,15 @@ void readInputBmpfile(pixel* RGB, int imageSize, unsigned char* bmpheader, FILE*
 
 
 }
+
+/*
+ * This function creates 3 files, each contain only the red, green and blue colors of the respective pixels. Also a 4th file with the colors inverted
+ * @param: pointer array of struct pixel
+ * @param: unsigned char pointer bmpheader: header information of input bmp file
+ * @param: int imagesize = size of input image
+ * @param: char pointer used to store the input bmp file name
+ * @return: void
+ */
 void outputBMP(pixel* RGB, unsigned char* bmpheader, int imageSize, char* inputFileName){
     removeBMPfromString(inputFileName);
     char strRed[] = "_red.bmp";
@@ -90,6 +126,12 @@ void outputBMP(pixel* RGB, unsigned char* bmpheader, int imageSize, char* inputF
     free(outputName);
     free(RGBout);
 }
+
+/*
+ * This function removes .bmp from the name of the input bmp file
+ * @param: char pointer used to store the input bmp file name
+ * @return: void
+ */
 void removeBMPfromString(char* inputFileName){
     int a = strlen(inputFileName);
 
@@ -100,6 +142,12 @@ void removeBMPfromString(char* inputFileName){
 
 }
 
+/*
+ * This function puts _color.bmp behind the name of the outputFile example: inputFileName = meme.bmp the .bmp is removed in removeBMPfromString this function makes it for color red meme_red.bmp
+ * @param: char pointer used to store the input bmp file name
+ * @param: char str[] = contains what has to come behind inputFileName ex: meme_red.bmp   str[] contains _red.bmp
+ * @return: char* outputname = outputname of file
+ */
 char* outputBMPFileName(char* inputFileName, char str[]){
 
     int sizeName = strlen(inputFileName) + strlen(str);
@@ -111,6 +159,14 @@ char* outputBMPFileName(char* inputFileName, char str[]){
 
 }
 
+/*
+ * This function creates the outputFile and writes the outputfile
+ * @param: unsigned char pointer bmpheader: header information of input bmp file
+ * @param: char* outputName= name of outputfile
+ * @param: unsigned char pointer RGBout= contains the pixels of the outputFile
+ * @param: int imagesize = size of input image
+ * @return: void
+ */
 void createOutput(unsigned char* bmpheader, char* outputName, unsigned char* RGBout, int imageSize){
 
     FILE *fp;
@@ -127,6 +183,14 @@ void createOutput(unsigned char* bmpheader, char* outputName, unsigned char* RGB
 
 
 }
+
+/*
+ * This function creates the output rgb for red
+ * @param: unsigned char pointer RGBRed = contains the output rgb
+ * @param: pointer array of struct pixel
+ * @param: int imagesize = size of input image
+ * @return: void
+ */
 void outputRGBRed(unsigned char* RGBRed, pixel* RGB, int imageSize){
     int x = 0;
     int j = imageSize / 3;
@@ -139,6 +203,14 @@ void outputRGBRed(unsigned char* RGBRed, pixel* RGB, int imageSize){
     }
 
 }
+
+/*
+ * This function creates the output rgb for green
+ * @param: unsigned char pointer RGBGreen = contains the output rgb
+ * @param: pointer array of struct pixel
+ * @param: int imageSize = size of input image
+ * @return: void
+ */
 void outputRGBGreen(unsigned char* RGBGreen, pixel* RGB, int imageSize){
     int x = 0;
     int j = imageSize / 3;
@@ -151,6 +223,14 @@ void outputRGBGreen(unsigned char* RGBGreen, pixel* RGB, int imageSize){
     }
 
 }
+
+/*
+ * This function creates the output rgb for blue
+ * @param: unsigned char pointer RGBBlue = contains the output rgb
+ * @param: pointer array of struct pixel
+ * @param int imageSize = size of input image
+ * @return: void
+ */
 void outputRGBBlue(unsigned char* RGBBlue, pixel* RGB, int imageSize){
     int x = 0;
     int j = imageSize / 3;
@@ -162,6 +242,14 @@ void outputRGBBlue(unsigned char* RGBBlue, pixel* RGB, int imageSize){
         x = x + 3;
     }
 }
+
+/*
+ * This function creates the output rgb for inverted
+ * @param: unsigned char pointer RGBinverted = contains the output rgb
+ * @param: pointer array of struct pixel
+ * @param: int imageSize = size of input image
+ * @return: void
+ */
 void outputRGBinverted(unsigned char* RGBinverted, pixel* RGB, int imageSize){
     int x = 0;
     int j = imageSize / 3;
